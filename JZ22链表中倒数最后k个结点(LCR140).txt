@@ -1,0 +1,17 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func trainingPlan(head *ListNode, cnt int) *ListNode {
+	left, right := head, head
+	for i := 0; i < cnt; i++ {
+		right = right.Next
+	}
+	for right != nil {
+		left, right = left.Next, right.Next
+	}
+	return left
+}

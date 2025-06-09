@@ -1,0 +1,21 @@
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	index1, index2, index := m-1, n-1, m+n-1
+	for index1 >= 0 && index2 >= 0 {
+		if nums1[index1] >= nums2[index2] {
+			nums1[index] = nums1[index1]
+			index--
+			index1--
+		} else {
+			nums1[index] = nums2[index2]
+			index--
+			index2--
+		}
+	}
+	//如果index2=0，说明nums2全部进入nums1
+	//nums1剩余未移动的元素，要移动的位置就是自己所处的位置，无需移动
+	for index2 >= 0 {
+		nums1[index] = nums2[index2]
+		index--
+		index2--
+	}
+}

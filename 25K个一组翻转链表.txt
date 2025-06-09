@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	reverseList := func(head *ListNode) *ListNode {
+		var pre, cur, next *ListNode
+		cur = head
+		for cur != nil {
+			next = cur.Next
+			cur.Next = pre
+			pre = cur
+			cur = next
+		}
+		return pre
+	}
+	//k = 3
+	//dummyHead   ->   1   ->   2   ->   3   ->   4   ->   5
+	//pre            start               end     next
+	dummyHead := &ListNode{Next: head}
+	pre, end := dummyHead, dummyHead
+	for pre.Next != nil {
+		for i := 0; i < k && end != nil; i++ {
+			end = end.Next
+		}
+		//最后还剩k-1个结点时, end会刚好走到nil
+		//i < k 不满足 退出循环，其实 end != nil 刚好也不满足了
+		//dummyHead   ->   3   ->   2   ->   1   ->   4   ->   5
+		//pre                          start/pre/end  next
+		//如果不判断，第二次进入for i := 0; i < k && end != nil; i++ {
+		//end=1 -> end=4 -> end=5 -> end=nil
+		//end.Next = nil { 判断nil.Next出错
+		if end == nil {
+			break
+		}
+		start := pre.Next
+		next := end.Next
+		end.Next = nil
+		pre.Next = reverseList(start)
+		start.Next = next
+		pre, end = start, start
+	}
+	return dummyHead.Next
+}

@@ -1,0 +1,20 @@
+//https://www.acwing.com/video/1532/
+func findPeakElement(nums []int) int {
+	left, right := 0, len(nums)-1
+	for left < right {
+		mid := (left + right) / 2
+		//只要数组中存在一个元素比右边相邻元素大，那么它作为右区间的左边界一定可以找到一个峰值
+		if nums[mid] > nums[mid+1] {
+			//[left, mid] 在mid及mid左边能找到峰值
+			//因为mid此时 可能 为峰值
+			right = mid
+		} else {
+			//对于所有有效的 i 都有 nums[i] != nums[i + 1]
+			//另一种情况:nums[mid] < nums[mid+1]
+			//[mid+1, right] 在mid+1及mid+1右边能找到峰值
+			//因为mid此时 不可能 为峰值
+			left = mid + 1
+		}
+	}
+	return left
+}

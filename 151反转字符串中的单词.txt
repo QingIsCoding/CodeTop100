@@ -1,0 +1,23 @@
+func reverseWords(s string) string {
+	// 使用 strings.Fields 分割字符串，自动去除多余空格
+	// 使用 strings.Join 重新连接字符串，单词之间用单个空格分隔
+	// 相当于去除字符串内的多余空格
+	s = strings.Join(strings.Fields(s), " ")
+	reverseWord := func(strArr []byte) {
+		for i, j := 0, len(strArr)-1; i < j; i, j = i+1, j-1 {
+			strArr[i], strArr[j] = strArr[j], strArr[i]
+		}
+	}
+	strArr := []byte(s)
+	reverseWord(strArr)
+	var left, right int
+	for right = 0; right <= len(strArr); right++ {
+		//if sArr[right] == ' ' || right == len(sArr) ×
+		//更改顺序会导致判断sArr[right] = sArr[len(sArr)] 数组越界错误
+		if right == len(s) || strArr[right] == ' ' {
+			reverseWord(strArr[left:right])
+			left = right + 1
+		}
+	}
+	return string(strArr)
+}

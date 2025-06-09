@@ -1,0 +1,46 @@
+func restoreIpAddresses(s string) []string {
+	var ans []string
+	var pointNum int
+	isValid := func(left, right int) bool {
+		if left > right {
+			return false
+		}
+		if s[left] == '0' && left != right {
+			return false
+		}
+		num, _ := strconv.Atoi(s[left : right+1])
+		if num > 255 {
+			return false
+		}
+		return true
+	}
+	var backtrack func(startIndex int)
+	backtrack = func(startIndex int) {
+		if pointNum == 3 {
+			if isValid(startIndex, len(s)-1) {
+				ans = append(ans, s)
+			}
+			return
+		}
+		for i := startIndex; i < len(s); i++ {
+			if isValid(startIndex, i) {
+				temp := s
+				s = s[:i+1] + "." + s[i+1:]
+				pointNum++
+				//for i := startIndex; i < len(s); i++ {情况下
+				//backtrack(i + 2)不会越界
+				//因为s = s[:i+1] + "." + s[i+1:]更新了s的长度
+				backtrack(i + 2)
+				pointNum--
+				s = temp
+			} else {
+				break
+			}
+		}
+	}
+	if len(s) < 4 || len(s) > 12 {
+		return ans
+	}
+	backtrack(0)
+	return ans
+}

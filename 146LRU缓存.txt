@@ -1,0 +1,75 @@
+type DoublyListNode struct {
+	Key, Value int
+	Pre, Next  *DoublyListNode
+}
+
+type LRUCache struct {
+	size, capacity       int
+	dummyHead, dummyTail *DoublyListNode
+	cache                map[int]*DoublyListNode
+}
+
+func Constructor(capacity int) LRUCache {
+	dummyHead, dummyTail := &DoublyListNode{}, &DoublyListNode{}
+	dummyHead.Next = dummyTail
+	dummyTail.Pre = dummyHead
+	cache := make(map[int]*DoublyListNode)
+	return LRUCache{
+		capacity:  capacity,
+		dummyHead: dummyHead,
+		dummyTail: dummyTail,
+		cache:     cache,
+	}
+}
+
+func (this *LRUCache) AddToHead(node *DoublyListNode) {
+	node.Pre = this.dummyHead
+	node.Next = this.dummyHead.Next
+	this.dummyHead.Next.Pre = node
+	this.dummyHead.Next = node
+}
+
+func (this *LRUCache) DelNode(node *DoublyListNode) {
+	node.Pre.Next = node.Next
+	node.Next.Pre = node.Pre
+}
+
+func (this *LRUCache) Get(key int) int {
+	if node, ok := this.cache[key]; ok {
+		this.DelNode(node)
+		this.AddToHead(node)
+		return node.Value
+	} else {
+		return -1
+	}
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	//3行4行4行
+	if node, ok := this.cache[key]; ok {
+		//node 3个
+		node.Value = value
+		this.DelNode(node)
+		this.AddToHead(node)
+	} else {
+		//add 3个
+		add := &DoublyListNode{Key: key, Value: value}
+		this.cache[key] = add
+		this.AddToHead(add)
+		this.size++
+		if this.size > this.capacity {
+			//del 3个
+			del := this.dummyTail.Pre
+			this.DelNode(del)
+			delete(this.cache, del.Key)
+			this.size--
+		}
+	}
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */

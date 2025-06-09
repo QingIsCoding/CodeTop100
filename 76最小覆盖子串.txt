@@ -1,0 +1,36 @@
+func minWindow(s string, t string) string {
+	ans := []int{0, math.MaxInt}
+	need := make(map[byte]int)
+	//1.need->needCnt
+	for i := range t {
+		need[t[i]]++
+	}
+	needCnt := len(t)
+	var left, right int
+	for right < len(s) {
+		//2.needCnt->need
+		//1->0 先判断1>0
+		if need[s[right]] > 0 {
+			needCnt--
+		}
+		need[s[right]]--
+		right++
+		for needCnt == 0 {
+			if right-left < ans[1]-ans[0] {
+				ans = []int{left, right}
+			}
+			//3.need->needCnt
+			//0->1 后判断1>0
+			need[s[left]]++
+			if need[s[left]] > 0 {
+				needCnt++
+			}
+			left++
+		}
+	}
+	if ans[1] == math.MaxInt {
+		return ""
+	} else {
+		return s[ans[0]:ans[1]]
+	}
+}

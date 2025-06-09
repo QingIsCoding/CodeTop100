@@ -1,0 +1,30 @@
+func myAtoi(s string) int {
+	flag, num, startIndex := 1, 0, 0
+	//不能用s = strings.ReplaceAll(s, " ", ""),否则会去除所有空格
+	//输入:"   +0 123"
+	//输出:0(而不是123)
+	//题目只要求去除前导空格
+	s = strings.TrimLeft(s, " ")
+	if s == "" {
+		return 0
+	}
+	switch s[0] {
+	case '+':
+		startIndex = 1
+	case '-':
+		startIndex, flag = 1, -1
+	}
+	for i := startIndex; i < len(s); i++ {
+		if !unicode.IsDigit(rune(s[i])) {
+			break
+		}
+		num = 10*num + int(s[i]-'0')
+		if flag == 1 && num > math.MaxInt32 {
+			return math.MaxInt32
+		}
+		if flag == -1 && -num < math.MinInt32 {
+			return math.MinInt32
+		}
+	}
+	return flag * num
+}

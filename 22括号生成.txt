@@ -1,0 +1,33 @@
+func generateParenthesis(n int) []string {
+	var ans []string
+	var path string
+	var left, right int
+	var backtrack func()
+	backtrack = func() {
+		if left == n && right == n {
+			ans = append(ans, path)
+			return
+		}
+		if left < right {
+			return
+		}
+		//左括号不够
+		if left < n {
+			path += "("
+			left++
+			backtrack()
+			left--
+			path = path[:len(path)-1]
+		}
+		//右括号不够
+		if right < n {
+			path += ")"
+			right++
+			backtrack()
+			right--
+			path = path[:len(path)-1]
+		}
+	}
+	backtrack()
+	return ans
+}

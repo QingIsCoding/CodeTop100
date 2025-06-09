@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reorderList(head *ListNode) {
+	//链表中间 或者 链表中间靠左 的那个节点
+	//12345的3 或者 123456的3
+	findFirstHalfEnd := func(head *ListNode) *ListNode {
+		slow, fast := head, head
+		for fast.Next != nil && fast.Next.Next != nil {
+			slow, fast = slow.Next, fast.Next.Next
+		}
+		return slow
+	}
+	reverseList := func(head *ListNode) *ListNode {
+		var pre, cur, next *ListNode
+		cur = head
+		for cur != nil {
+			next = cur.Next
+			cur.Next = pre
+			pre = cur
+			cur = next
+		}
+		return pre
+	}
+	firstHalfEnd := findFirstHalfEnd(head)
+	l1, l2 := head, firstHalfEnd.Next
+	firstHalfEnd.Next = nil
+	l2 = reverseList(l2)
+	for l2 != nil {
+		next1, next2 := l1.Next, l2.Next
+		l1.Next = l2
+		l2.Next = next1
+		l1, l2 = next1, next2
+	}
+}

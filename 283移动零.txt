@@ -1,0 +1,10 @@
+func moveZeroes(nums []int) {
+	var left int
+	for right := 0; right < len(nums); right++ {
+		if nums[right] != 0 {
+			//将左指针的零与右指针的非零数交换
+			nums[left], nums[right] = nums[right], nums[left]
+			left++
+		}
+	}
+}

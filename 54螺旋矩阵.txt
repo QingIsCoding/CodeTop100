@@ -1,0 +1,40 @@
+func spiralOrder(matrix [][]int) []int {
+	var ans []int
+	row, column := len(matrix), len(matrix[0])
+	up, down, left, right := 0, row-1, 0, column-1
+	curCount, maxCount := 0, column*row
+	for {
+		for j := left; j <= right; j++ {
+			ans = append(ans, matrix[up][j])
+			curCount++
+		}
+		if curCount == maxCount {
+			return ans
+		}
+		up++
+		for i := up; i <= down; i++ {
+			ans = append(ans, matrix[i][right])
+			curCount++
+		}
+		if curCount == maxCount {
+			return ans
+		}
+		right--
+		for j := right; j >= left; j-- {
+			ans = append(ans, matrix[down][j])
+			curCount++
+		}
+		if curCount == maxCount {
+			return ans
+		}
+		down--
+		for i := down; i >= up; i-- {
+			ans = append(ans, matrix[i][left])
+			curCount++
+		}
+		if curCount == maxCount {
+			return ans
+		}
+		left++
+	}
+}

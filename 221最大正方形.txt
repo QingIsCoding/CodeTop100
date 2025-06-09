@@ -1,0 +1,18 @@
+func maximalSquare(matrix [][]byte) int {
+	row, column := len(matrix), len(matrix[0])
+	maxSide := 0
+	//以matrix[i-1][j-1]为右下角的最大正方形边长
+	dp := make([][]int, row+1)
+	for i := range dp {
+		dp[i] = make([]int, column+1)
+	}
+	for i := 1; i <= row; i++ {
+		for j := 1; j <= column; j++ {
+			if matrix[i-1][j-1] == '1' {
+				dp[i][j] = min(min(dp[i-1][j], dp[i-1][j-1]), dp[i][j-1]) + 1
+				maxSide = max(maxSide, dp[i][j])
+			}
+		}
+	}
+	return maxSide * maxSide
+}

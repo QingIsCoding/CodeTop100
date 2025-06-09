@@ -1,0 +1,31 @@
+func isValid(s string) bool {
+	if len(s)%2 == 1 {
+		return false
+	}
+	stack := []rune{}
+	//1.左括号必须用相同类型的右括号闭合->多了左括号
+	//2.每个右括号都有一个对应的相同类型的左括号->多了右括号
+	//3.左括号必须以正确的顺序闭合->左右括号不匹配
+	//4.全部匹配成功
+	for _, ch := range s {
+		//三种左括号的情况，存放为对应的右括号入栈
+		if ch == '(' {
+			stack = append(stack, ')')
+		} else if ch == '[' {
+			stack = append(stack, ']')
+		} else if ch == '{' {
+			stack = append(stack, '}')
+			//准备寻找对应的右括号来配对已入栈的左括号(存放为右括号)
+			//2.多了右括号(没找到对应的左括号)
+			//3.左右括号不匹配
+		} else if len(stack) == 0 || ch != stack[len(stack)-1] {
+			return false
+			//此右括号匹配成功
+		} else {
+			stack = stack[:len(stack)-1]
+		}
+	}
+	//len(stack) != 0则1.多了左括号
+	//len(stack) == 0则4.全部匹配成功
+	return len(stack) == 0
+}

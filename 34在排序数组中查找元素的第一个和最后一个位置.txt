@@ -1,0 +1,35 @@
+func searchRange(nums []int, target int) []int {
+	ans := []int{-1, -1}
+	if len(nums) == 0 {
+		return ans
+	}
+	//left......[first...last]......right
+	//..........target...target..........
+	left, right := 0, len(nums)-1
+	//找右区间[first, right]的左端点first
+	for left < right {
+		mid := (left + right) / 2
+		if nums[mid] >= target {
+			right = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	if nums[left] == target {
+		ans[0] = left
+	}
+	left, right = 0, len(nums)-1
+	//找左区间[left, last]的右端点last
+	for left < right {
+		mid := (left + right + 1) / 2
+		if nums[mid] <= target {
+			left = mid
+		} else {
+			right = mid - 1
+		}
+	}
+	if nums[left] == target {
+		ans[1] = left
+	}
+	return ans
+}

@@ -1,0 +1,31 @@
+func combinationSum2(candidates []int, target int) [][]int {
+	var ans [][]int
+	var path []int
+	visited := make([]bool, len(candidates))
+	var backtrack func(startIndex, curSum int)
+	backtrack = func(startIndex, curSum int) {
+		if curSum > target {
+			return
+		}
+		if curSum == target {
+			temp := append([]int{}, path...)
+			ans = append(ans, temp)
+			return
+		}
+		for i := startIndex; i < len(candidates); i++ {
+			if i > 0 && candidates[i] == candidates[i-1] && !visited[i-1] {
+				continue
+			}
+			path = append(path, candidates[i])
+			curSum += candidates[i]
+			visited[i] = true
+			backtrack(i+1, curSum)
+			visited[i] = false
+			curSum -= candidates[i]
+			path = path[:len(path)-1]
+		}
+	}
+	sort.Ints(candidates)
+	backtrack(0, 0)
+	return ans
+}

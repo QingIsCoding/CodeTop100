@@ -1,0 +1,23 @@
+func largestNumber(nums []int) string {
+	//在全序关系中，任意两个元素都可进行比较，且能得出它们之间的大小关系
+	//1.如果 a ≤ b 且 b ≤ a 则 a = b (反对称性)
+	//2.如果 a ≤ b 且 b ≤ c 则 a ≤ c (传递性)
+	//3.a ≤ b 或 b ≤ a (完全性)
+	strArr := make([]string, len(nums))
+	for i, num := range nums {
+		strArr[i] = strconv.Itoa(num)
+	}
+	sort.Slice(strArr, func(i, j int) bool {
+		return strArr[i]+strArr[j] > strArr[j]+strArr[i]
+	})
+	//strings.Join(s []string, sep string) 将字符串切片中存在的所有元素连接为单个字符串
+	//s是可用来连接元素的字符串
+	//sep是放置在最终字符串中元素之间的分隔符
+	ans := strings.Join(strArr, "")
+	//结果有可能为全0，判断开头是否为0即可
+	if ans[0] == '0' {
+		return "0"
+	} else {
+		return ans
+	}
+}

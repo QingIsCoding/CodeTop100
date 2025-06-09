@@ -1,0 +1,16 @@
+func uniquePaths(m int, n int) int {
+	dp := make([]int, n)
+	for i := range dp {
+		dp[i] = 1
+	}
+	// dp[i][j] = dp[i-1][j] + dp[i][j-1]
+	// dp[j] = dp[j] + dp[j-1]
+	// dp[j] 在被更新前代表到达上一行第 j 列位置 (i-1, j) 的路径数量
+	// dp[j-1] 代表到达当前行第 j-1 列位置 (i, j-1) 的路径数量
+	for i := 1; i < m; i++ {
+		for j := 1; j < n; j++ {
+			dp[j] += dp[j-1]
+		}
+	}
+	return dp[n-1]
+}

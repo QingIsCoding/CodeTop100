@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxPathSum(root *TreeNode) int {
+	ans := math.MinInt
+	var maxGain func(node *TreeNode) int
+	maxGain = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		leftMaxGain := max(maxGain(node.Left), 0)
+		rightMaxGain := max(maxGain(node.Right), 0)
+		ans = max(ans, node.Val+leftMaxGain+rightMaxGain)
+		return node.Val + max(leftMaxGain, rightMaxGain)
+	}
+	maxGain(root)
+	return ans
+}

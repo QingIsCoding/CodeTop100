@@ -1,0 +1,24 @@
+func trap(height []int) int {
+	//单调递减栈(越后入栈越小,定义中可以存在相等元素)
+	//找出每个元素右侧第一个比它大的元素
+	//------------------
+	//||0   1   2   3   4       i
+	//||50  40  30  20  10   height[i]从栈底到栈顶递减
+	//------------------
+	ans := 0
+	length := len(height)
+	stack := make([]int, 0)
+	for i := 0; i < length; i++ {
+		for len(stack) > 0 && height[i] > height[stack[len(stack)-1]] {
+			mid := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			if len(stack) > 0 {
+				curHeight := min(height[i], height[stack[len(stack)-1]]) - height[mid]
+				curWidth := i - stack[len(stack)-1] - 1
+				ans += curHeight * curWidth
+			}
+		}
+		stack = append(stack, i)
+	}
+	return ans
+}

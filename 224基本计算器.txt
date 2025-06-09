@@ -1,0 +1,64 @@
+func calculate(s string) int {
+	//题目要求'-'可以用作一元运算，即 "-1" 和 "-(2 + 3)" 是有效的)
+	//1.在s前添加一个0，防止第一个数可能是负数
+	if s[0] == '-' {
+		s = "0" + s
+	}
+	//2.为防止()内出现的首个字符为运算符
+	//2.1将所有的空格去掉
+	s = strings.ReplaceAll(s, " ", "")
+	//2.2并将 所有的首个负号 前加个0
+	s = strings.ReplaceAll(s, "(-", "(0-")
+	var numStack []int
+	var opStack []byte
+	eval := func() {
+		b := numStack[len(numStack)-1]
+		numStack = numStack[:len(numStack)-1]
+		a := numStack[len(numStack)-1]
+		numStack = numStack[:len(numStack)-1]
+		op := opStack[len(opStack)-1]
+		opStack = opStack[:len(opStack)-1]
+		switch op {
+		case '+':
+			numStack = append(numStack, a+b)
+		case '-':
+			numStack = append(numStack, a-b)
+		}
+	}
+	//不能用for i, ch := range s {}
+	//因为range在每个循环步骤中都会重新设置i的值
+	//导致后面的i = j - 1这一行代码并不会改变下一次迭代中的i
+	for i := 0; i < len(s); i++ {
+		if s[i] >= '0' && s[i] <= '9' {
+			num := 0
+			j := i
+			for j < len(s) && s[j] >= '0' && s[j] <= '9' {
+				num = 10*num + int(s[j]-'0')
+				j++
+			}
+			numStack = append(numStack, num)
+			//s[i,j]是一整个数字,j++后，i先变成j-1，在for循环的i++再变成j
+			//也就是i++后，i指向整个数字的后面一个字符
+			i = j - 1
+		} else if s[i] == '(' {
+			opStack = append(opStack, '(')
+		} else if s[i] == ')' {
+			for len(opStack) > 0 && opStack[len(opStack)-1] != '(' {
+				eval()
+			}
+			opStack = opStack[:len(opStack)-1]
+			//else:'+''-'运算符的情况
+		} else {
+			//如果像227基本计算器Ⅱ中有不同优先级的运算符
+			//for len(opStack) > 0 && opStack[len(opStack)-1] != '(' && priority[opStack[len(opStack)-1]] >= priority[s[i]] {
+			for len(opStack) > 0 && opStack[len(opStack)-1] != '(' {
+				eval()
+			}
+			opStack = append(opStack, s[i])
+		}
+	}
+	for len(opStack) > 0 {
+		eval()
+	}
+	return numStack[0]
+}

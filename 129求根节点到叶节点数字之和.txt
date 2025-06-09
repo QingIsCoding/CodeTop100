@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sumNumbers(root *TreeNode) int {
+	var ans int
+	if root == nil {
+		return ans
+	}
+	queue := []*NodeNum{{Node: root, Num: root.Val}}
+	for len(queue) > 0 {
+		curNode := queue[0].Node
+		curNum := queue[0].Num
+		queue = queue[1:]
+		if curNode.Left == nil && curNode.Right == nil {
+			ans += curNum
+		}
+		if curNode.Left != nil {
+			queue = append(queue, &NodeNum{Node: curNode.Left, Num: 10*curNum + curNode.Left.Val})
+		}
+		if curNode.Right != nil {
+			queue = append(queue, &NodeNum{Node: curNode.Right, Num: 10*curNum + curNode.Right.Val})
+		}
+	}
+	return ans
+}
+
+type NodeNum struct {
+	Node *TreeNode
+	Num  int
+}
